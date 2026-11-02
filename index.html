@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#176b59">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Mon journal des céphalées</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#202a28;background:#f3f6f5}
+*{box-sizing:border-box}body{margin:0;padding:14px 14px 34px;max-width:720px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 14px}
+h1{font-size:22px;margin:0}h2{font-size:16px;margin:0 0 12px}
+.sub{font-size:12px;color:#687570}.count{font-size:24px;font-weight:800;color:#176b59}
+.progress{height:7px;background:#dce5e1;border-radius:20px;overflow:hidden;margin-bottom:14px}.progress div{height:100%;background:#176b59;width:0}
+nav{display:flex;gap:8px;margin-bottom:12px}button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:11px 13px;font-weight:650}
+nav button,.secondary{background:#e6eeeb;color:#24443c;border:1px solid #d2dfd9}nav button{flex:1}.primary{background:#176b59;color:white;width:100%}
+.panel{background:white;border:1px solid #e0e8e4;border-radius:14px;padding:14px;margin:10px 0}
+label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}
+input:not([type=checkbox]),select,textarea{width:100%;border:1px solid #ccd8d2;border-radius:9px;padding:10px;background:#fbfdfc;font:inherit;color:#202a28}
+input[type=range]{width:100%;accent-color:#176b59;padding:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{margin-top:12px}.range{display:flex;align-items:center;gap:8px}.score{font-size:20px;font-weight:800;color:#176b59;min-width:24px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px}.check{display:flex;gap:8px;align-items:center;font-size:14px}.check input{width:auto}
+.muted{font-size:12px;color:#687570}.hidden{display:none!important}
+.entry{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border:1px solid #e0e8e4;border-radius:10px;margin:7px 0}
+.entry small{display:block;color:#687570}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{font-size:23px;font-weight:800}
+.bars{height:76px;display:flex;align-items:end;gap:4px}.bars i{flex:1;background:#176b59;border-radius:4px 4px 0 0;min-width:3px}
+button:focus,input:focus,select:focus,textarea:focus{outline:2px solid #80b9a8;outline-offset:1px}
+</style>
+</head>
+<body>
+<header><div><h1>Mon suivi quotidien</h1><div class="sub">56 jours pour mieux comprendre mes céphalées</div></div><div style="text-align:right"><div class="count" id="count">0/56</div><div class="sub">jours remplis</div></div></header>
+<div class="progress"><div id="progress"></div></div>
+<nav><button class="primary" id="tabToday">＋ Remplir ma journée</button><button id="tabHistory">Historique</button></nav>
+<section id="todayView">
+<div class="panel"><label for="day">Date du suivi</label><input type="date" id="day"><p class="muted">Une seule fiche par jour. Tu peux revenir modifier une journée passée.</p></div>
+<div class="panel"><h2>1. Mes douleurs</h2><div class="grid">
+<div><label>Au réveil</label><div class="range"><input id="morning" type="range" min="0" max="10" value="5"><span class="score" id="morningV">5</span></div></div>
+<div><label>En journée</label><div class="range"><input id="daypain" type="range" min="0" max="10" value="5"><span class="score" id="daypainV">5</span></div></div>
+<div><label>Le soir</label><div class="range"><input id="evening" type="range" min="0" max="10" value="5"><span class="score" id="eveningV">5</span></div></div>
+<div><label for="duration">Durée</label><select id="duration"><option>Quelques heures</option><option selected>Presque toute la journée</option><option>Toute la journée</option><option>Aucune douleur</option></select></div></div>
+<div class="field"><label for="location">Localisation principale</label><select id="location"><option>Bandeau frontal</option><option>Tempes</option><option>Arrière du crâne</option><option>Nuque / base du crâne</option><option>Diffuse / plusieurs zones</option><option>Autre</option><option>Aucune douleur</option></select></div>
+<div class="field"><label for="type">Type de douleur</label><select id="type"><option>Pression / étau</option><option>Élancement / pulsations</option><option>Pesanteur</option><option>Brûlure</option><option>Autre</option><option>Aucune douleur</option></select></div></div>
+<div class="panel"><h2>2. Nuque et cervicales</h2><div class="grid"><div><label>Raideur au réveil</label><select id="stiff"><option>Non</option><option selected>Oui, légère</option><option>Oui, importante</option></select></div><div><label>Douleur cervicale</label><select id="neckpain"><option>Non</option><option>Faible</option><option selected>Modérée</option><option>Forte</option></select></div></div><div class="field"><label>Effet des mouvements / étirements</label><select id="neckmob"><option>Pas testé</option><option>Amélioration</option><option>Aucun effet</option><option>Aggravation</option></select></div></div>
+<div class="panel"><h2>3. Sommeil et récupération</h2><div class="grid"><div><label>Durée de sommeil (h)</label><input id="sleep" type="number" min="0" max="24" step=".5" placeholder="Ex. 7.5"></div><div><label>Qualité du sommeil</label><select id="sleepquality"><option>Bonne</option><option>Moyenne</option><option>Mauvaise</option></select></div></div><div class="field"><label>Fatigue au réveil</label><select id="rest"><option>Faible</option><option>Modérée</option><option>Importante</option></select></div></div>
+<div class="panel"><h2>4. Activité et facteurs de soulagement</h2><div class="grid"><div><label>Sport</label><select id="sport"><option>Aucun</option><option>Marche</option><option>Cardio</option><option>Musculation</option><option>Hyrox / entraînement intense</option><option>Autre</option></select></div><div><label>Écrans</label><select id="screen"><option>Moins de 2 h</option><option>2 à 4 h</option><option>4 à 6 h</option><option>Plus de 6 h</option></select></div></div><div class="field"><label>Douche chaude / chaleur</label><select id="heat"><option>Pas testé</option><option>Soulagement net</option><option>Soulagement léger</option><option>Aucun effet</option></select></div><div class="field"><label>Effet du sport ou du mouvement</label><select id="sportEffect"><option>Pas testé</option><option>Amélioration</option><option>Aucun effet</option><option>Aggravation</option></select></div><div class="field"><label>Hydratation et repas</label><select id="food"><option>Habitudes habituelles</option><option>Repas sauté</option><option>Hydratation insuffisante</option><option>Repas sauté et hydratation insuffisante</option></select></div></div>
+<div class="panel"><h2>5. Médicaments</h2><p class="muted">Note toutes les prises, même si elles sont destinées à la nuque plutôt qu'au mal de tête.</p><div class="grid"><div><label>Médicament</label><select id="med"><option>Aucun</option><option>Paracétamol / Doliprane / Dafalgan</option><option>Ibuprofène</option><option>Autre</option></select></div><div><label>Dose (mg)</label><input id="meddose" type="number" min="0" placeholder="Ex. 1000"></div></div><div class="field"><label>Motif de la prise</label><select id="medreason"><option>Mal de tête</option><option>Douleur cervicale</option><option>Les deux</option><option>Autre</option><option>Sans objet</option></select></div><div class="field"><label>Effet du médicament</label><select id="medeffect"><option>Sans objet</option><option>Disparition complète</option><option>Soulagement partiel</option><option>Aucun effet</option></select></div></div>
+<div class="panel"><h2>6. Autres symptômes et observations</h2><div class="checks"><label class="check"><input type="checkbox" id="nausea"> Nausées</label><label class="check"><input type="checkbox" id="light"> Gêne à la lumière</label><label class="check"><input type="checkbox" id="sound"> Gêne au bruit</label><label class="check"><input type="checkbox" id="vision"> Trouble visuel</label></div><div class="field"><label>Remarques libres</label><textarea id="notes" rows="3" placeholder="Événement particulier, stress, entraînement, réveils nocturnes…"></textarea></div></div>
+<button class="primary" id="save">Enregistrer ma journée</button><p class="muted" id="saveMsg" style="text-align:center">Données enregistrées sur cet appareil, dans ce navigateur.</p>
+</section>
+<section id="historyView" class="hidden">
+<div class="panel"><h2>Mon évolution</h2><div class="stats"><div><div class="muted">Jours renseignés</div><div class="stat" id="statDays">0</div></div><div><div class="muted">Moyenne au réveil</div><div class="stat" id="statAvg">—</div></div></div><div class="muted" style="margin-top:12px">Intensité au réveil – dernières entrées</div><div class="bars" id="bars"></div></div>
+<div class="grid"><button class="secondary" id="export">Exporter CSV</button><button class="secondary" id="backup">Sauvegarde JSON</button></div>
+<div class="panel"><h2>Mes journées enregistrées</h2><div id="entries" class="muted">Aucune entrée pour le moment.</div></div>
+<div class="panel"><h2>Importer une sauvegarde</h2><input type="file" id="importFile" accept=".json,application/json"><p class="muted">Restaure les données depuis un fichier JSON exporté précédemment.</p></div>
+</section>
+<p class="muted" style="text-align:center;margin-top:18px">Journal personnel de suivi, non destiné à établir un diagnostic. Pense à exporter régulièrement une sauvegarde.</p>
+<script>
+(()=>{const $=id=>document.getElementById(id),key='headacheDiary_v1';let data={};try{data=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}
+const fields=['morning','daypain','evening','duration','location','type','stiff','neckpain','neckmob','sleep','sleepquality','rest','sport','screen','heat','sportEffect','food','med','meddose','medreason','medeffect','nausea','light','sound','vision','notes'];
+const today=()=>{let d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};$('day').value=today();
+['morning','daypain','evening'].forEach(id=>$(id).oninput=()=>$(id+'V').textContent=$(id).value);
+function read(){let o={};fields.forEach(id=>{let e=$(id);o[id]=e.type==='checkbox'?e.checked:e.value});return o}
+function write(o){fields.forEach(id=>{let e=$(id);if(o&&o[id]!==undefined){if(e.type==='checkbox')e.checked=!!o[id];else e.value=o[id]}else if(e.type==='checkbox')e.checked=false});['morning','daypain','evening'].forEach(id=>$(id+'V').textContent=$(id).value)}
+function load(){write(data[$('day').value]||{});$('saveMsg').textContent=data[$('day').value]?'Fiche existante chargée : tu peux la modifier.':'Nouvelle journée à remplir.'}
+$('day').onchange=load;
+function render(){let dates=Object.keys(data).sort(),n=dates.length;$('count').textContent=n+'/56';$('progress').style.width=Math.min(100,n/56*100)+'%';$('statDays').textContent=n;let vals=dates.map(d=>Number(data[d].morning)).filter(Number.isFinite);$('statAvg').textContent=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1)+'/10':'—';$('bars').innerHTML='';dates.slice(-14).forEach(d=>{let v=Number(data[d].morning)||0,b=document.createElement('i');b.style.height=Math.max(3,v*7)+'px';b.title=d+' : '+v+'/10';$('bars').append(b)});let list=$('entries');list.innerHTML='';if(!n){list.textContent='Aucune entrée pour le moment.';return}dates.reverse().forEach(d=>{let o=data[d],el=document.createElement('div');el.className='entry';let info=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=new Date(d+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});small.textContent='Réveil : '+o.morning+'/10 · Journée : '+o.daypain+'/10 · Soir : '+o.evening+'/10';info.append(strong,small);let btn=document.createElement('button');btn.className='secondary';btn.textContent='Modifier';btn.onclick=()=>{$('day').value=d;load();show('today')};el.append(info,btn);list.append(el)})}
+function show(which){$('todayView').classList.toggle('hidden',which!=='today');$('historyView').classList.toggle('hidden',which!=='history');$('tabToday').className=which==='today'?'primary':'secondary';$('tabHistory').className=which==='history'?'primary':'secondary';if(which==='history')render()}
+$('tabToday').onclick=()=>show('today');$('tabHistory').onclick=()=>show('history');
+$('save').onclick=()=>{let d=$('day').value;if(!d)return;data[d]=read();try{localStorage.setItem(key,JSON.stringify(data));$('saveMsg').textContent='Journée enregistrée ✓';render()}catch(e){$('saveMsg').textContent='Stockage indisponible : exporte tes données.'}};
+function download(name,content,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([content],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+$('export').onclick=()=>{let rows=[['Date',...fields],...Object.keys(data).sort().map(d=>[d,...fields.map(f=>data[d][f]??'')])];download('journal-cephalees.csv','\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n'),'text/csv;charset=utf-8')};
+$('backup').onclick=()=>download('sauvegarde-cephalees.json',JSON.stringify(data,null,2),'application/json');
+$('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!x||typeof x!=='object'||Array.isArray(x))throw Error();data={...data,...x};localStorage.setItem(key,JSON.stringify(data));render();alert('Sauvegarde importée.')}catch(err){alert('Fichier de sauvegarde invalide.')}e.target.value=''};
+load();render();
+})();
+</script>
+<script>if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});</script></body></html>
